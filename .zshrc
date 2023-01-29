@@ -7,7 +7,7 @@ autoload -U promptinit; promptinit
 prompt pure
 # auto suggestion like fish
 source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-bindkey '$' autosuggest-accept
+bindkey '$$' autosuggest-accept
 # export CLICOLOR=1
 # export LSCOLORS=ExGxBxDxCxEgEdxbxgxcxd
 # PROMPT='\[\e[32m\][\u@Macbook: \[\e[36m\]\W\[\e[32m\]]\[\e[0m\] '
@@ -18,6 +18,10 @@ export EDITOR='nvim'
 export PATH=$PATH:"/opt/homebrew/bin"
 export PATH=$PATH:"$HOME/dotfiles"
 export PATH=$PATH:"$HOME/dotfiles/bin"
+
+# Note setup
+export PATH=$PATH:"$HOME/notes"
+export NOTES_DIR="$HOME/notes"
 
 # Shell history
 HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
@@ -138,6 +142,20 @@ ensure_tmux_is_running() {
   fi
 }
 
+# LF tool for landing where you navigated to upon exit
+lfcd () {
+    tmp="$(mktemp)"
+    lf -last-dir-path="$tmp" "$@"
+    if [ -f "$tmp" ]; then
+        dir="$(cat "$tmp")"
+        rm -f "$tmp"
+        if [ -d "$dir" ]; then
+            if [ "$dir" != "$(pwd)" ]; then
+                cd "$dir"
+            fi
+        fi
+    fi
+}
 # ensure_tmux_is_running
 
 # >>> conda initialize >>>
